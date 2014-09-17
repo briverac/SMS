@@ -1,0 +1,15 @@
+C:\Users\PARSO\Desktop\SMS\SMS\bin\Debug\SMS.exe
+C:\Users\PARSO\Desktop\SMS\SMS\bin\Debug\SMS.pdb
+C:\Users\PARSO\Desktop\SMS\SMS\bin\Debug\GSMCommShared.dll
+C:\Users\PARSO\Desktop\SMS\SMS\bin\Debug\RS232.dll
+C:\Users\PARSO\Desktop\SMS\SMS\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\PARSO\Desktop\SMS\SMS\obj\Debug\SMS.Delete.resources
+C:\Users\PARSO\Desktop\SMS\SMS\obj\Debug\SMS.frmConnection.resources
+C:\Users\PARSO\Desktop\SMS\SMS\obj\Debug\SMS.Receive.resources
+C:\Users\PARSO\Desktop\SMS\SMS\obj\Debug\SMS.Send.resources
+C:\Users\PARSO\Desktop\SMS\SMS\obj\Debug\SMS.Form1.resources
+C:\Users\PARSO\Desktop\SMS\SMS\obj\Debug\SMS.csproj.GenerateResource.Cache
+C:\Users\PARSO\Desktop\SMS\SMS\obj\Debug\SMS.exe
+C:\Users\PARSO\Desktop\SMS\SMS\obj\Debug\SMS.pdb
+C:\Users\PARSO\Desktop\SMS\SMS\bin\Debug\Newtonsoft.Json.dll
+C:\Users\PARSO\Desktop\SMS\SMS\bin\Debug\Newtonsoft.Json.xml
