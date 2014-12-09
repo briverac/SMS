@@ -14,6 +14,8 @@ using System.Net;
 using System.Text;
 using System.IO;
 using Newtonsoft.Json.Linq;
+using System.Xml;
+using System.Reflection;
 
 namespace SMS
 {
@@ -31,7 +33,6 @@ namespace SMS
 		private delegate void SetTextCallback(string text);
         private CommSetting comm_settings = new CommSetting();
         private IContainer components;
-        private string BASE_URL = "http://dev.parso.cr";
         private MenuItem menuItem1;
         private MenuItem menuItem2;
         private MenuItem menuItem3;
@@ -180,27 +181,32 @@ namespace SMS
 	
 		private void Form1_Load(object sender, System.EventArgs e)
 		{
-            // Prompt user for connection settings
-			int port = GsmCommMain.DefaultPortNumber;
-			int baudRate = 9600; // We Set 9600 as our Default Baud Rate
+            try
+            {
+                string AppPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase);
+                string ConfigFile = Path.Combine(AppPath, "App.config");
+                XmlDocument oXml = new XmlDocument();
+                oXml.Load(ConfigFile);
+                XmlNode settings = oXml["configuration"]["appSettings"];
+                Constants.setCommPort(Convert.ToInt32(settings.ChildNodes[0].Attributes["value"].Value));
+                Constants.setBaudRate(Convert.ToInt32(settings.ChildNodes[1].Attributes["value"].Value));
+                Constants.setTimeOut(Convert.ToInt32(settings.ChildNodes[2].Attributes["value"].Value));
+                Constants.setServer(settings.ChildNodes[3].Attributes["value"].Value);
+                Constants.setPhoneToNotify(settings.ChildNodes[4].Attributes["value"].Value);
+                Constants.setKey(settings.ChildNodes[5].Attributes["value"].Value);
+                
+            }
+            catch
+            {
+            }
+            
+            int port = Constants.getCommPort();
+			int baudRate = Constants.getBaudRate(); 
 			int timeout = GsmCommMain.DefaultTimeout;
 
-			frmConnection dlg = new frmConnection();
-			dlg.StartPosition = FormStartPosition.CenterScreen;
-			dlg.SetData(port, baudRate, timeout);
-			
-			if (dlg.ShowDialog(this) == DialogResult.OK)
-			{
-				dlg.GetData(out port, out baudRate, out timeout);
-				CommSetting.Comm_Port=port;
-				CommSetting.Comm_BaudRate=baudRate;
-				CommSetting.Comm_TimeOut=timeout;
-			}
-			else
-			{
-				Close();
-				return;
-			}
+			CommSetting.Comm_Port=port;
+			CommSetting.Comm_BaudRate=baudRate;
+			CommSetting.Comm_TimeOut=timeout;
 
 			Cursor.Current = Cursors.WaitCursor;
 			CommSetting.comm = new GsmCommMain(port, baudRate, timeout);
@@ -241,8 +247,9 @@ namespace SMS
 		private void OnPhoneConnectionChange(bool connected)
 		{
 			lbl_phone_status.Text="CONEXION CON MODEM EXITOSA";
+            CommSetting.comm.DeleteMessages(DeleteScope.All, PhoneStorageType.Sim);
             SmsSubmitPdu pdu;
-            pdu = new SmsSubmitPdu("Se inicio el servidor de SMS", "86231121", "");
+            pdu = new SmsSubmitPdu("Se inicio el servidor de SMS", Constants.getPhoneToNotify(), "");
             CommSetting.comm.SendMessage(pdu);
 		}
 
@@ -356,13 +363,8 @@ namespace SMS
 				Output("-------------------------------------------------------------------");
                 try
                 {
-                    var request = (HttpWebRequest)WebRequest.Create(BASE_URL + "/api/v1/sms/create");
-                    string phone = data.OriginatingAddress;
-                    if (phone.Length == 12)
-                    {
-                        phone = phone.Remove(0, 4);
-                    }
-                    var postData = MessageToJson(phone, data.UserDataText);
+                    var request = (HttpWebRequest)WebRequest.Create(Constants.getServer() + "/api/v1/sms/create");
+                    var postData = MessageToJson(data.SCTimestamp.ToString(),data.OriginatingAddress, data.UserDataText,DateTime.Now.Ticks.ToString());
                     var data2 = Encoding.UTF8.GetBytes(postData);
                     request.Method = "POST";
                     request.ContentType = "application/json";
@@ -379,6 +381,7 @@ namespace SMS
                 {
                     MessageBox.Show(wx.Message);
                 }
+                CommSetting.comm.DeleteMessages(DeleteScope.All, PhoneStorageType.Sim);
 				return;
 			}
 			if (pdu is SmsStatusReportPdu)
@@ -432,14 +435,15 @@ namespace SMS
 			Delete delete=new Delete();
 			delete.Show();
 		}
-        private string MessageToJson(string pMo, string pBody)
+        private string MessageToJson(string pSmscTimestamp, string pMo, string pBody, string pRequestTimestamp)
         {
             JObject user =
                 new JObject(
-                    new JProperty("data", 
-                        new JObject(
-                            new JProperty("mo", pMo),
-                            new JProperty("body", pBody))));
+                    new JProperty("smscTimestamp", pSmscTimestamp),
+                    new JProperty("mo", pMo),
+                    new JProperty("body", pBody),
+                    new JProperty("requestTimestamp", pRequestTimestamp),
+                    new JProperty("key", Constants.getKey()));
             string result = user.ToString();
             return result;
         }

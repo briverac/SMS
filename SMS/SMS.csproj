@@ -110,6 +110,7 @@
     <Compile Include="CommSetting.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Constants.cs" />
     <Compile Include="Delete.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -127,19 +128,29 @@
     </Compile>
     <EmbeddedResource Include="Delete.resx">
       <DependentUpon>Delete.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmConnection.resx">
       <DependentUpon>frmConnection.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Receive.resx">
       <DependentUpon>Receive.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Send.resx">
       <DependentUpon>Send.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ServerMain.resx">
       <DependentUpon>ServerMain.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

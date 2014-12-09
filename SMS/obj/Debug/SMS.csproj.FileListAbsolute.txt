@@ -13,3 +13,5 @@ C:\Users\PARSO\Desktop\SMS\SMS\obj\Debug\SMS.exe
 C:\Users\PARSO\Desktop\SMS\SMS\obj\Debug\SMS.pdb
 C:\Users\PARSO\Desktop\SMS\SMS\bin\Debug\Newtonsoft.Json.dll
 C:\Users\PARSO\Desktop\SMS\SMS\bin\Debug\Newtonsoft.Json.xml
+C:\Users\PARSO\Desktop\SMS\SMS\bin\Debug\SMS.exe.config
+C:\Users\PARSO\Desktop\SMS\SMS\bin\Debug\App.config
