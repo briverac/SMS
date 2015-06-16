@@ -249,8 +249,15 @@ namespace SMS
 			lbl_phone_status.Text="CONEXION CON MODEM EXITOSA";
             CommSetting.comm.DeleteMessages(DeleteScope.All, PhoneStorageType.Sim);
             SmsSubmitPdu pdu;
-            pdu = new SmsSubmitPdu("Se inicio el servidor de SMS", Constants.getPhoneToNotify(), "");
-            CommSetting.comm.SendMessage(pdu);
+            try
+            {
+                pdu = new SmsSubmitPdu("Se inicio el servidor de SMS", Constants.getPhoneToNotify(), "");
+                CommSetting.comm.SendMessage(pdu);
+            }
+            catch
+            {
+                MessageBox.Show("No hay saldo recargue la línea");
+            }
 		}
 
 		
